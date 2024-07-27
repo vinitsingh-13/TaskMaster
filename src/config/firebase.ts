@@ -3,14 +3,14 @@ import { initializeApp } from "firebase/app";
 import {getAuth} from "firebase/auth"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCbFXmkrBqNPk69Q3Gjt5-yakJUfEQxM0A",
-  authDomain: "taskmastertodo.firebaseapp.com",
-  projectId: "taskmastertodo",
-  storageBucket: "taskmastertodo.appspot.com",
-  messagingSenderId: "977684502626",
-  appId: "1:977684502626:web:649b3fd846f94f7d46593b",
-  measurementId: "G-951X9V6FH1",
-  databaseURL:"https://taskmastertodo-default-rtdb.firebaseio.com"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
