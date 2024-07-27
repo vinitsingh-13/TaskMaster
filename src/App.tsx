@@ -5,7 +5,7 @@ import MainContent from "./components/MainContent";
 import{ Toaster} from "react-hot-toast";
 export default function App() {
   const [todoArr, setTodoArr] = useState<TodoType[]>([]);
- 
+
   return (
     <div className="flex h-screen flex-col items-center gap-8 pt-8 lg:py-10">
     <AddTodo  setTodoArr={setTodoArr}/>

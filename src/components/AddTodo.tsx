@@ -48,7 +48,7 @@ export default function AddTodo({ setTodoArr }: AddTodoProps) {
     setTodoDesc("");
   }
 
- 
+
   
   return (
     <div className="flex flex-col items-center rounded-lg bg-slate-50 lg:pt-12 shadow-lg lg:w-[45%] w-[90%] pt-12">
