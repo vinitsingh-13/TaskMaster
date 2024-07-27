@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { TodoType, AddTodoProps} from "../types";
+import { useState } from "react";
+import { AddTodoProps} from "../types";
 import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
+import { getDatabase,ref,set,push,get } from "firebase/database";
+import { app } from "../config/firebase";
 
 export default function AddTodo({ setTodoArr }: AddTodoProps) {
   const [todoTitle, setTodoTitle] = useState<string>("");
   const [todoDesc, setTodoDesc] = useState<string>("");
-  const newArr: TodoType[] = [];
 
   function uuidToNumber(uuid: string): number {
     let hash = 0;
@@ -18,38 +19,36 @@ export default function AddTodo({ setTodoArr }: AddTodoProps) {
     return Math.abs(hash);
   }
 
-  function handleTodos(e: React.FormEvent) {
+  async function handleTodos(e: React.FormEvent) {
     e.preventDefault();
     if (todoTitle === "" || todoDesc === "") {
       toast.error("Please enter the task first");
       return;
     }
-    const todo: TodoType = {
-      id: uuidToNumber(uuidv4()),
-      title: todoTitle,
-      desc: todoDesc,
-    };
-    setTodoArr((cur: TodoType[]) => [...cur, todo]);
+    //setting data to the firebase database
+    const db = getDatabase(app);
+    const newTodoRef = push(ref(db,"Todos/Todo"));
+    set(newTodoRef,{
+      title:todoTitle,
+      desc:todoDesc,
+      id:uuidToNumber(uuidv4())
+    }).then(()=>{
+      toast.success("Task added successfully")
+    }).catch((err)=>{
+      toast.error(err.message)
+    })
 
-    if (localStorage.length === 0) {
-      newArr.push(todo);
-      localStorage.setItem("task", JSON.stringify(newArr));
-    } else {
-      const task = JSON.parse(localStorage.getItem("task")!);
-      newArr.push(...task);
-      newArr.push(todo);
-      localStorage.setItem("task", JSON.stringify(newArr));
-    }
-    toast.success("Task added successfully");
+    //setting data to the todoArr
+    const tododb = getDatabase(app);
+    const tododbref = ref(tododb,"Todos/Todo");
+    const getTodo = await get(tododbref);
+    if(!getTodo.exists()) return;
+    setTodoArr(Object.values(getTodo.val()))
     setTodoTitle("");
     setTodoDesc("");
   }
 
-  useEffect(function () {
-    const initialRenderTask = JSON.parse(localStorage.getItem("task")!);
-    if (!initialRenderTask) return;
-    setTodoArr(initialRenderTask);
-  }, []);
+ 
   
   return (
     <div className="flex flex-col items-center rounded-lg bg-slate-50 lg:pt-12 shadow-lg lg:w-[45%] w-[90%] pt-12">
